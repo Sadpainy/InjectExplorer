@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Injection Explorer</title>
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a12;
+            color: #d0d0e8;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section - Neon 核心 */
+        .hero {
+            padding: 100px 0 70px;
+            border-bottom: 2px solid rgba(0, 180, 255, 0.2);
+            position: relative;
+            text-align: left;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 140px;
+            height: 3px;
+            background: linear-gradient(90deg, #00b4ff, #a855f7);
+            box-shadow: 0 0 20px rgba(0, 180, 255, 0.5);
+        }
+
+        .hero h1 {
+            font-size: clamp(54px, 10vw, 120px);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            background: linear-gradient(135deg, #00b4ff 0%, #a855f7 60%, #ff6b9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 40px rgba(0, 180, 255, 0.15));
+        }
+
+        .hero .tagline {
+            font-size: 24px;
+            color: #a0b0d0;
+            max-width: 720px;
+            font-weight: 300;
+            border-left: 4px solid #00b4ff;
+            padding-left: 28px;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 20px rgba(0, 180, 255, 0.1);
+        }
+
+        /* Sections */
+        .section {
+            padding: 80px 0;
+            border-bottom: 1px solid rgba(0, 180, 255, 0.08);
+        }
+
+        .section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 30px;
+            color: #e0e0f0;
+            border-left: 4px solid #a855f7;
+            padding-left: 22px;
+            text-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
+        }
+
+        .section p {
+            font-size: 18px;
+            color: #b0bcd4;
+            max-width: 780px;
+            margin-bottom: 18px;
+            line-height: 1.8;
+        }
+
+        /* Cards - Neon 风格 */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .card {
+            background: #11111f;
+            border: 1px solid #2a2a4a;
+            border-radius: 16px;
+            padding: 32px 28px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: #00b4ff;
+            background: #15152a;
+            transform: translateY(-4px);
+            box-shadow: 0 0 40px rgba(0, 180, 255, 0.08), inset 0 0 30px rgba(0, 180, 255, 0.02);
+        }
+
+        .card h3 {
+            font-size: 21px;
+            font-weight: 600;
+            color: #e8e8ff;
+            margin-bottom: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .card h3::before {
+            content: '▸ ';
+            color: #00b4ff;
+        }
+
+        .card p {
+            font-size: 16px;
+            color: #a0b0c8;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        /* Feature List */
+        .features-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 40px;
+            margin: 30px 0 10px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-list li {
+            font-size: 16px;
+            color: #b0c0d8;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(0, 180, 255, 0.05);
+        }
+
+        .features-list li::before {
+            content: "◆";
+            color: #00b4ff;
+            font-size: 10px;
+            text-shadow: 0 0 10px rgba(0, 180, 255, 0.5);
+        }
+
+        /* Download Area - Neon 重点 */
+        .download-area {
+            background: #11111f;
+            border: 1px solid #2a2a4a;
+            border-radius: 20px;
+            padding: 44px 40px;
+            margin: 40px 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 28px;
+            box-shadow: 0 0 60px rgba(0, 180, 255, 0.04);
+            position: relative;
+        }
+
+        .download-area::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00b4ff, #a855f7, transparent);
+            filter: blur(2px);
+        }
+
+        .download-area .info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .download-area .icon-box {
+            width: 60px;
+            height: 60px;
+            background: #0d0d1a;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            border: 1px solid #2a2a4a;
+            color: #00b4ff;
+            box-shadow: 0 0 30px rgba(0, 180, 255, 0.05);
+        }
+
+        .download-area .meta .name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #e8e8ff;
+        }
+
+        .download-area .meta .size {
+            font-size: 15px;
+            color: #7070a0;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #00b4ff, #a855f7);
+            color: #ffffff;
+            border: none;
+            padding: 16px 48px;
+            border-radius: 60px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: 0.4px;
+            box-shadow: 0 0 30px rgba(0, 180, 255, 0.25);
+        }
+
+        .btn-download:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 60px rgba(0, 180, 255, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #b0c0d8;
+            border: 1px solid #2a2a4a;
+            padding: 14px 36px;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline:hover {
+            background: #1a1a30;
+            border-color: #00b4ff;
+            color: #e8e8ff;
+            box-shadow: 0 0 30px rgba(0, 180, 255, 0.05);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 70px;
+            padding-top: 36px;
+            border-top: 1px solid rgba(0, 180, 255, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+            color: #606080;
+        }
+
+        .footer a {
+            color: #8080b0;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: #00b4ff;
+            text-shadow: 0 0 20px rgba(0, 180, 255, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .hero {
+                padding: 60px 0 40px;
+            }
+            .hero h1 {
+                font-size: 44px;
+            }
+            .hero .tagline {
+                font-size: 19px;
+                padding-left: 18px;
+            }
+            .download-area {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                padding: 30px 20px;
+            }
+            .download-area .info {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn-download,
+            .btn-outline {
+                width: 100%;
+                text-align: center;
+            }
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+            .footer {
+                flex-direction: column;
+                gap: 14px;
+                text-align: center;
+            }
+            .section h2 {
+                font-size: 28px;
+                padding-left: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Hero -->
+    <div class="hero">
+        <h1>Injection Explorer</h1>
+        <div class="tagline">Android system permission controller &amp; input injection framework</div>
+    </div>
+
+    <!-- Overview -->
+    <div class="section">
+        <h2>Overview</h2>
+        <p>
+            Injection Explorer is a command-line tool designed for security research,
+            system debugging, and advanced automation on Android devices. It provides
+            direct access to 28 system-level permissions, input event injection,
+            display capture, and SurfaceFlinger / InputFlinger control.
+        </p>
+        <p>
+            Built for researchers, engineers, and power users who need transparent
+            visibility and control over Android runtime behavior.
+        </p>
+    </div>
+
+    <!-- Core Capabilities -->
+    <div class="section">
+        <h2>Core Capabilities</h2>
+        <div class="grid-3">
+            <div class="card">
+                <h3>Permission Control</h3>
+                <p>Grant, revoke, and audit 28 signature-level Android permissions including INJECT_EVENTS, CAPTURE_VIDEO_OUTPUT, and ACCESS_SURFACE_FLINGER.</p>
+            </div>
+            <div class="card">
+                <h3>Input Injection</h3>
+                <p>Inject touch, key, swipe, text, and pointer events directly into the system input pipeline. Supports both global and process-targeted injection.</p>
+            </div>
+            <div class="card">
+                <h3>Display Capture</h3>
+                <p>Capture screenshots, screen recordings, display buffers, and secure displays. Includes framebuffer read and pointer event capture.</p>
+            </div>
+            <div class="card">
+                <h3>SurfaceFlinger Control</h3>
+                <p>Inspect and modify layer properties, transaction states, power modes, and display configurations through the ISurfaceComposer interface.</p>
+            </div>
+            <div class="card">
+                <h3>InputFlinger Access</h3>
+                <p>Monitor and control the native input pipeline—EventHub, InputReader, and InputDispatcher—with full visibility into device events.</p>
+            </div>
+            <div class="card">
+                <h3>Audit &amp; Logging</h3>
+                <p>Comprehensive operation logging with session tracking, audit trails, and integrated logcat filtering for debugging and compliance.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supported Permissions -->
+    <div class="section">
+        <h2>Supported Permissions</h2>
+        <p>
+            Injection Explorer works with 28 real Android system permissions, all
+            verified against AOSP source. These include:
+        </p>
+        <ul class="features-list">
+            <li>INJECT_EVENTS, INJECT_PROCESS_EVENTS, INJECT_INPUT_EVENTS</li>
+            <li>INTERCEPT_KEY_EVENTS, CONSUME_KEY_EVENTS, FILTER_EVENTS</li>
+            <li>CAPTURE_VIDEO_OUTPUT, CAPTURE_SECURE_VIDEO_OUTPUT</li>
+            <li>CAPTURE_AUDIO_OUTPUT, CAPTURE_MEDIA_OUTPUT</li>
+            <li>ACCESS_SURFACE_FLINGER, ACCESS_INPUT_FLINGER</li>
+            <li>MANAGE_SURFACE_FLINGER, MODIFY_SURFACE_FLINGER</li>
+            <li>CONTROL_INPUT_FLINGER, MODIFY_INPUT_FLINGER</li>
+            <li>INJECT_POINTER_EVENTS, CAPTURE_POINTER_EVENTS</li>
+            <li>SET_POINTER_CAPTURE, CONTROL_TOUCH_SCREEN</li>
+            <li>SET_TOUCH_SENSITIVITY, READ_FRAME_BUFFER</li>
+            <li>and more...</li>
+        </ul>
+    </div>
+
+    <!-- Getting Started -->
+    <div class="section">
+        <h2>Getting Started</h2>
+        <p>
+            Download the Inject.sh script, push it to your Android device, and run it
+            as root with SELinux set to permissive. The script works on Android 11
+            through 16, providing both interactive panel and command-line modes.
+        </p>
+        <div class="download-area">
+            <div class="info">
+                <div class="icon-box">⬇</div>
+                <div class="meta">
+                    <div class="name">Inject.sh</div>
+                    <div class="size">Shell script · ~210 KB</div>
+                </div>
+            </div>
+            <div>
+                <a href="/Inject.sh" download="Inject.sh" class="btn-download">Download Inject.sh</a>
+                <a href="https://github.com/Sadpainy/InjectExplorer" target="_blank" rel="noopener noreferrer" class="btn-outline" style="margin-left:12px;">View on GitHub</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <span>Injection Explorer</span>
+        <span>
+            <a href="https://github.com/Sadpainy/InjectExplorer" target="_blank" rel="noopener noreferrer">GitHub</a>
+            &nbsp;·&nbsp;
+            <a href="#">Documentation</a>
+            &nbsp;·&nbsp;
+            <a href="https://github.com/Sadpainy/InjectExplorer/issues" target="_blank" rel="noopener noreferrer">Issues</a>
+        </span>
+    </div>
+
+</div>
+
+</body>
+</html> 
